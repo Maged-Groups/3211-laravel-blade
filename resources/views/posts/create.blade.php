@@ -1,275 +1,186 @@
 @extends('layout.app')
 
 
+@section('title', 'Create a new Post')
+ 
+
 @section('main-content')
 
-    <div class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-8">
-        <div class="max-w-4xl mx-auto px-4">
-            <!-- Header -->
-            <div class="mb-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-800">Create New Post</h1>
-                        <p class="text-gray-600 mt-2">Share your thoughts, ideas, or knowledge with the community</p>
-                    </div>
-                    <a href="{{ route('home') }}"
-                        class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
-                        <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
-                        Back to Feed
-                    </a>
-                </div>
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Create New Post</h1>
+                <p class="text-gray-600 mt-2">Share your thoughts, ideas, or knowledge with the community</p>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Form -->
-                <div class="lg:col-span-2">
-                    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="createPostForm"
-                        class="bg-white rounded-2xl shadow-lg overflow-hidden">
-
-                        @csrf
-
-                        <!-- Form Header -->
-                        <div class="border-b border-gray-200 px-6 py-4">
-                            <div class="flex items-center">
-                                <div
-                                    class="rounded-full border-2 border-indigo-100 w-10 h-10 bg-linear-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold mr-3">
-                                    MY
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Maged Yaseen</p>
-                                    <p class="text-sm text-gray-500">@magedyaseengroups</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Post Content -->
-                        <div class="p-6">
-                            <!-- Title -->
-                            <div class="mb-6">
-                                <label for="postTitle" class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                    <i data-lucide="type" class="w-4 h-4 mr-2 text-indigo-600"></i>
-                                    Post Title
-                                </label>
-                                <input type="text" id="postTitle" name="post_title" value="{{ old('post_title') }}"
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                                    placeholder="What's your post about?" required>
-                                <p class="mt-1 text-sm text-gray-500">Make it catchy and descriptive</p>
-                                <p class="text-red-500 text-xs">@error('post_title') {{ $message }} @enderror</p>
-                            </div>
-
-                            <!-- Content -->
-                            <div class="mb-6">
-                                <label for="postContent"
-                                    class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                    <i data-lucide="edit" class="w-4 h-4 mr-2 text-indigo-600"></i>
-                                    Post Content
-                                </label>
-                                <div class="relative">
-                                    <textarea id="postContent" name="post_body" rows="12"
-                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none"
-                                        placeholder="Write your thoughts here... (Supports Markdown)" required></textarea>
-
-                                    <!-- Word Counter -->
-                                    <div class="absolute bottom-3 right-3 text-sm text-gray-500">
-                                        <span id="wordCount">0</span> words
-                                    </div>
-                                </div>
-                                <p class="text-red-500 text-xs">@error('post_body') {{ $message }} @enderror</p>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="mb-6">
-                                <label for="postTags" class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                    <i data-lucide="tag" class="w-4 h-4 mr-2 text-indigo-600"></i>
-                                    Post Status
-                                </label>
-
-                                <div class="relative">
-                                    <select type="text" id="postTags"
-                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                                        placeholder="" name="post_status_id">
-                                        <option value="{{ null }}">(-- Select Post Status --)</option>
-                                        @foreach ($postStatuses as $postStatus)
-                                            <option value="{{ $postStatus->id }}">{{ $postStatus->type }}</option>
-                                        @endforeach
-                                    </select>
-                                    <p class="text-red-500 text-xs">@error('post_status_id') {{ $message }} @enderror</p>
-                                    <div class="mt-2 flex flex-wrap gap-2" id="tagsContainer"></div>
-                                </div>
-                            </div>
-
-                            <!-- Image Upload -->
-                            <div class="mb-6">
-                                <label class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                    <i data-lucide="image" class="w-4 h-4 mr-2 text-indigo-600"></i>
-                                    Featured Image
-                                </label>
-                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-indigo-400 transition-colors"
-                                    id="imageUploadArea">
-                                    <div class="space-y-1 text-center">
-                                        <i data-lucide="upload-cloud" class="mx-auto h-12 w-12 text-gray-400"></i>
-                                        <div class="flex text-sm text-gray-600">
-                                            <label for="postImage"
-                                                class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                                <span>Upload a file</span>
-                                                <input id="postImage" name="thumbnail" type="file" class="sr-only"
-                                                    accept="image/*">
-                                            </label>
-                                            <p class="pl-1">or drag and drop</p>
-                                        </div>
-                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
-                                        <p class="text-red-500 text-xs">@error('thumbnail') {{ $message }} @enderror</p>
-                                    </div>
-                                </div>
-                                <div id="imagePreview" class="mt-4 hidden">
-                                    <div class="relative rounded-lg overflow-hidden">
-                                        <img id="previewImage" src="" alt="Preview" class="w-full h-64 object-cover">
-                                        <button type="button" id="removeImage"
-                                            class="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors">
-                                            <i data-lucide="x" class="w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
-                                <button type="submit"
-                                    class="flex-1 px-6 py-3 bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center">
-                                    <i data-lucide="send" class="w-5 h-5 mr-2"></i>
-                                    Publish Post
-                                </button>
-                            </div>
-
-                            {{-- <div class="text-red-400">
-                                @foreach ($errors->all() as $error)
-                                <p>{{ $error }}</p>
-                                @endforeach
-                            </div> --}}
-                            <div>
-                                @if ($errors->any())
-                                    <p class="text-red-500 border-red-500">Fill all required fields!</p>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    <!-- Tips Card -->
-                    <div class="bg-linear-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white mb-6">
-                        <h3 class="text-lg font-bold mb-4 flex items-center">
-                            <i data-lucide="lightbulb" class="w-5 h-5 mr-2"></i>
-                            Writing Tips
-                        </h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-start">
-                                <i data-lucide="check-circle" class="w-5 h-5 mr-2 mt-0.5"></i>
-                                <span>Keep titles clear and descriptive</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i data-lucide="check-circle" class="w-5 h-5 mr-2 mt-0.5"></i>
-                                <span>Use formatting for better readability</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i data-lucide="check-circle" class="w-5 h-5 mr-2 mt-0.5"></i>
-                                <span>Add relevant tags for discoverability</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i data-lucide="check-circle" class="w-5 h-5 mr-2 mt-0.5"></i>
-                                <span>Include code snippets when relevant</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Formatting Guide -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i data-lucide="type" class="w-5 h-5 mr-2 text-indigo-600"></i>
-                            Formatting Guide
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                                <code class="text-gray-700">**bold**</code>
-                                <span class="font-semibold text-gray-600">Bold Text</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                                <code class="text-gray-700">*italic*</code>
-                                <span class="italic text-gray-600">Italic Text</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                                <code class="text-gray-700"># Heading</code>
-                                <span class="font-bold text-gray-600">Heading</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                                <code class="text-gray-700">- List item</code>
-                                <span class="text-gray-600">Bullet List</span>
-                            </div>
-                            <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-                                <code class="text-gray-700">> Quote</code>
-                                <span class="text-gray-600">Blockquote</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Drafts -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-2 text-indigo-600"></i>
-                            Recent Drafts
-                        </h3>
-                        <div class="space-y-3">
-                            <div
-                                class="p-3 border border-gray-200 rounded-lg hover:border-indigo-300 transition-colors cursor-pointer">
-                                <p class="font-medium text-gray-800 truncate">Getting Started with Laravel Livewire</p>
-                                <p class="text-sm text-gray-500 mt-1">Last edited 2 hours ago</p>
-                            </div>
-                            <div
-                                class="p-3 border border-gray-200 rounded-lg hover:border-indigo-300 transition-colors cursor-pointer">
-                                <p class="font-medium text-gray-800 truncate">CSS Grid vs Flexbox Guide</p>
-                                <p class="text-sm text-gray-500 mt-1">Last edited yesterday</p>
-                            </div>
-                            <a href="#"
-                                class="block text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium pt-2">
-                                View all drafts
-                                <i data-lucide="chevron-right" class="w-4 h-4 inline ml-1"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <a href="{{ route('home') }}" class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
+                Back to Feed
+            </a>
         </div>
+    </div>
 
-        <!-- Preview Modal -->
-        <div id="previewModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden z-50 overflow-y-auto">
-            <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl">
-                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                        <h3 class="text-2xl font-bold text-gray-800">Post Preview</h3>
-                        <button type="button" id="closePreview" class="text-gray-400 hover:text-gray-600">
-                            <i data-lucide="x" class="w-6 h-6"></i>
-                        </button>
+    <!-- Main Form -->
+    <div class="lg:col-span-2 border">
+        <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="createPostForm"
+            class="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+            @csrf
+
+            <!-- Form Header -->
+            <div class="border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center">
+                    <div
+                        class="rounded-full border-2 border-indigo-100 w-10 h-10 bg-linear-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold mr-3">
+                        MY
                     </div>
-                    <div class="p-6 max-h-[70vh] overflow-y-auto">
-                        <div id="previewContent" class="prose max-w-none">
-                            <!-- Preview content will be inserted here -->
+                    <div>
+                        <p class="font-medium text-gray-800">Maged Yaseen</p>
+                        <p class="text-sm text-gray-500">@magedyaseengroups</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post Content -->
+            <div class="p-6">
+                <!-- Title -->
+                <div class="mb-6">
+                    <label for="postTitle" class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i data-lucide="type" class="w-4 h-4 mr-2 text-indigo-600"></i>
+                        Post Title
+                    </label>
+                    <input type="text" id="postTitle" name="post_title" value="{{ old('post_title') }}"
+                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        placeholder="What's your post about?" required>
+                    <p class="mt-1 text-sm text-gray-500">Make it catchy and descriptive</p>
+                    <p class="text-red-500 text-xs">@error('post_title') {{ $message }} @enderror</p>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-6">
+                    <label for="postContent" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i data-lucide="edit" class="w-4 h-4 mr-2 text-indigo-600"></i>
+                        Post Content
+                    </label>
+                    <div class="relative">
+                        <textarea id="postContent" name="post_body" rows="12"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none"
+                            placeholder="Write your thoughts here... (Supports Markdown)" required></textarea>
+
+                        <!-- Word Counter -->
+                        <div class="absolute bottom-3 right-3 text-sm text-gray-500">
+                            <span id="wordCount">0</span> words
                         </div>
                     </div>
-                    <div class="flex justify-end gap-3 p-6 border-t border-gray-200">
-                        <button type="button" id="closePreviewBtn"
-                            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                            Close
-                        </button>
-                        <button type="button" id="editPostBtn"
-                            class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                            Edit Post
-                        </button>
+                    <p class="text-red-500 text-xs">@error('post_body') {{ $message }} @enderror</p>
+                </div>
+
+                <!-- Status -->
+                <div class="mb-6">
+                    <label for="postTags" class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i data-lucide="tag" class="w-4 h-4 mr-2 text-indigo-600"></i>
+                        Post Status
+                    </label>
+
+                    <div class="relative">
+                        <select type="text" id="postTags"
+                            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                            placeholder="" name="post_status_id">
+                            <option value="{{ null }}">(-- Select Post Status --)</option>
+                            @foreach ($postStatuses as $postStatus)
+                                <option value="{{ $postStatus->id }}">{{ $postStatus->type }}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-red-500 text-xs">@error('post_status_id') {{ $message }} @enderror</p>
+                        <div class="mt-2 flex flex-wrap gap-2" id="tagsContainer"></div>
                     </div>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="mb-6">
+                    <label class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i data-lucide="image" class="w-4 h-4 mr-2 text-indigo-600"></i>
+                        Featured Image
+                    </label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-indigo-400 transition-colors"
+                        id="imageUploadArea">
+                        <div class="space-y-1 text-center">
+                            <i data-lucide="upload-cloud" class="mx-auto h-12 w-12 text-gray-400"></i>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="postImage"
+                                    class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
+                                    <span>Upload a file</span>
+                                    <input id="postImage" name="thumbnail" type="file" class="sr-only" accept="image/*">
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                            <p class="text-red-500 text-xs">@error('thumbnail') {{ $message }} @enderror</p>
+                        </div>
+                    </div>
+                    <div id="imagePreview" class="mt-4 hidden">
+                        <div class="relative rounded-lg overflow-hidden">
+                            <img id="previewImage" src="" alt="Preview" class="w-full h-64 object-cover">
+                            <button type="button" id="removeImage"
+                                class="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                    <button type="submit"
+                        class="flex-1 px-6 py-3 bg-linear-to-br from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center">
+                        <i data-lucide="send" class="w-5 h-5 mr-2"></i>
+                        Publish Post
+                    </button>
+                </div>
+
+                {{-- <div class="text-red-400">
+                    @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                    @endforeach
+                </div> --}}
+                <div>
+                    @if ($errors->any())
+                        <p class="text-red-500 border-red-500">Fill all required fields!</p>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h3 class="text-2xl font-bold text-gray-800">Post Preview</h3>
+                    <button type="button" id="closePreview" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <div class="p-6 max-h-[70vh] overflow-y-auto">
+                    <div id="previewContent" class="prose max-w-none">
+                        <!-- Preview content will be inserted here -->
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 p-6 border-t border-gray-200">
+                    <button type="button" id="closePreviewBtn"
+                        class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Close
+                    </button>
+                    <button type="button" id="editPostBtn"
+                        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                        Edit Post
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -308,11 +219,11 @@
                 const tagElement = document.createElement('div');
                 tagElement.className = 'inline-flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm';
                 tagElement.innerHTML = `
-                                                                ${tag}
-                                                                <button type="button" class="ml-2 text-indigo-600 hover:text-indigo-800" data-tag="${tag.toLowerCase()}">
-                                                                    <i data-lucide="x" class="w-3 h-3"></i>
-                                                                </button>
-                                                            `;
+                                                                                    ${tag}
+                                                                                    <button type="button" class="ml-2 text-indigo-600 hover:text-indigo-800" data-tag="${tag.toLowerCase()}">
+                                                                                        <i data-lucide="x" class="w-3 h-3"></i>
+                                                                                    </button>
+                                                                                `;
                 tagsContainer.appendChild(tagElement);
                 lucide.createIcons();
 
@@ -417,37 +328,37 @@
                 const language = document.getElementById('codeLanguage').value;
 
                 let previewHTML = `
-                                                                <h1 class="text-3xl font-bold text-gray-800 mb-6">${title}</h1>
-                                                                <div class="prose prose-lg max-w-none">
-                                                                    ${marked.parse(content)}
-                                                                </div>
-                                                            `;
+                                                                                    <h1 class="text-3xl font-bold text-gray-800 mb-6">${title}</h1>
+                                                                                    <div class="prose prose-lg max-w-none">
+                                                                                        ${marked.parse(content)}
+                                                                                    </div>
+                                                                                `;
 
                 if (code) {
                     previewHTML += `
-                                                                    <div class="mt-8">
-                                                                        <h3 class="text-xl font-bold text-gray-800 mb-3">Code Snippet</h3>
-                                                                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code class="language-${language}">${code}</code></pre>
-                                                                    </div>
-                                                                `;
+                                                                                        <div class="mt-8">
+                                                                                            <h3 class="text-xl font-bold text-gray-800 mb-3">Code Snippet</h3>
+                                                                                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code class="language-${language}">${code}</code></pre>
+                                                                                        </div>
+                                                                                    `;
                 }
 
                 previewHTML += `
-                                                                <div class="mt-8 pt-6 border-t border-gray-200">
-                                                                    <div class="flex items-center">
-                                                                        <div class="rounded-full border-2 border-indigo-100 w-10 h-10 bg-linear-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold mr-3">
-                                                                            M
-                                                                        </div>
-                                                                        <div>
-                                                                            <p class="font-medium text-gray-800">Michael Chen</p>
-                                                                            <p class="text-sm text-gray-500">Posted just now</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="mt-4 flex flex-wrap gap-2">
-                                                                        ${tags.map(tag => `<span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">#${tag}</span>`).join('')}
-                                                                    </div>
-                                                                </div>
-                                                            `;
+                                                                                    <div class="mt-8 pt-6 border-t border-gray-200">
+                                                                                        <div class="flex items-center">
+                                                                                            <div class="rounded-full border-2 border-indigo-100 w-10 h-10 bg-linear-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold mr-3">
+                                                                                                M
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <p class="font-medium text-gray-800">Michael Chen</p>
+                                                                                                <p class="text-sm text-gray-500">Posted just now</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="mt-4 flex flex-wrap gap-2">
+                                                                                            ${tags.map(tag => `<span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">#${tag}</span>`).join('')}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                `;
 
                 return previewHTML;
             }
@@ -490,14 +401,14 @@
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-4 right-4 z-50 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg';
                     toast.innerHTML = `
-                                                                    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
-                                                                        <i data-lucide="check" class="w-5 h-5"></i>
-                                                                    </div>
-                                                                    <div class="ml-3 text-sm font-normal">Post published successfully!</div>
-                                                                    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 inline-flex h-8 w-8">
-                                                                        <i data-lucide="x" class="w-5 h-5"></i>
-                                                                    </button>
-                                                                `;
+                                                                                        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
+                                                                                            <i data-lucide="check" class="w-5 h-5"></i>
+                                                                                        </div>
+                                                                                        <div class="ml-3 text-sm font-normal">Post published successfully!</div>
+                                                                                        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 inline-flex h-8 w-8">
+                                                                                            <i data-lucide="x" class="w-5 h-5"></i>
+                                                                                        </button>
+                                                                                    `;
                     document.body.appendChild(toast);
                     lucide.createIcons();
 
@@ -529,11 +440,11 @@
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-4 right-4 z-50 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg';
                     toast.innerHTML = `
-                                                                    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg">
-                                                                        <i data-lucide="save" class="w-5 h-5"></i>
-                                                                    </div>
-                                                                    <div class="ml-3 text-sm font-normal">Draft saved successfully!</div>
-                                                                `;
+                                                                                        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg">
+                                                                                            <i data-lucide="save" class="w-5 h-5"></i>
+                                                                                        </div>
+                                                                                        <div class="ml-3 text-sm font-normal">Draft saved successfully!</div>
+                                                                                    `;
                     document.body.appendChild(toast);
                     lucide.createIcons();
 

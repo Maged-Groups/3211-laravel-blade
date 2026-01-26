@@ -14,35 +14,45 @@ use App\Http\Controllers\{
 };
 
 
-Route::view('/', 'index')->name('home');
+// Protected Routes
+Route::middleware('auth')->group(function () {
+    Route::view('/', 'index')->name('home');
+    Route::view('/settings', 'settings')->name('settings');
 
-Route::controller(PostController::class)
-    ->prefix("posts")->group(function () {
-        Route::get('deleted', 'deleted');
-        Route::get('{id}/restore', 'restore');
+    Route::controller(PostController::class)
+        ->prefix("posts")->group(function () {
+            Route::get('deleted', 'deleted');
+            Route::get('{id}/restore', 'restore');
+        });
+
+    Route::resources([
+        'users' => UserController::class,
+        'post-statuses' => PostStatusController::class,
+        'reaction-types' => ReactionTypeController::class,
+        'posts' => PostController::class,
+        'comments' => CommentController::class,
+        'replies' => ReplyController::class,
+    ]);
+
+    Route::controller(AuthController::class)->prefix('auth')->group(function () {
+        Route::post('change-password', 'change_password');
+        Route::get('active-sessions', 'active_sessions');
+        Route::get('logout-current', 'logout_current');
+        Route::get('logout-all', 'logout_all');
+        Route::get('logout-others', 'logout_others');
     });
+});
 
-Route::resources([
-    'users' => UserController::class,
-    'post-statuses' => PostStatusController::class,
-    'reaction-types' => ReactionTypeController::class,
-    'posts' => PostController::class,
-    'comments' => CommentController::class,
-    'replies' => ReplyController::class,
-]);
-
+// Public Routes
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
+    Route::get('login', 'login_form')->name('login');
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('forget-password', 'forget_password');
     Route::post('reset-password', 'reset_password');
-    Route::post('change-password', 'change_password');
-    Route::get('active-sessions', 'active_sessions');
-    Route::get('logout-current', 'logout_current');
-    Route::get('logout-all', 'logout_all');
-    Route::get('logout-others', 'logout_others');
 });
 
+// Special Initialization Routes
 Route::controller(InitController::class)->prefix('init')->group(
     function () {
         Route::get('models', 'models');
@@ -54,4 +64,5 @@ Route::controller(InitController::class)->prefix('init')->group(
     }
 );
 
+// Fallback Route
 Route::fallback(fn() => view('404'));

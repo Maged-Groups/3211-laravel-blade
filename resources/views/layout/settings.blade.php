@@ -28,17 +28,13 @@
                 <!-- Right Sidebar -->
                 <div class="lg:col-span-3 space-y-6">
                     <!-- Who to Follow -->
-                    @include('components.who-to-follow')
 
                     <!-- Trending Posts -->
-                    @include('components.trending-posts')
 
                     <!-- Upcoming Events -->
-                    @include('components.upcoming-events')
                 </div>
             </div>
         </div>
     </main>
-
 
 @endsection
