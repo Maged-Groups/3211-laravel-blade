@@ -2,7 +2,8 @@
 
 @section('main-content')
     <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="max-w-md w-full space-y-8 bg-white rounded-xl shadow-lg p-8">
+        <div class="max-w-md w-full space-y-8 bg-white dark:bg-gray-600 rounded-xl shadow-lg p-8">
+            {{-- Form Header --}}
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-900">
                     Sign in to your account
@@ -19,7 +20,7 @@
                 </div>
             @endif
 
-            <form class="space-y-6" method="POST" action="{{ route('login') }}">
+            <form class="space-y-6" method="POST" action="{{ route('login') }}" novalidate>
                 @csrf
 
                 <div>

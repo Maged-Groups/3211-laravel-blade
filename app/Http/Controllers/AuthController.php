@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,17 +25,20 @@ class AuthController extends Controller
 
         $authenticated = Auth::attempt($loginData);
 
-        if ($authenticated) {
-            $user = auth()->user();
+        if ($authenticated)
 
-            $token = $user->createToken('login', $user->roles, now()->addDays(360))->plainTextToken;
-            $user->token = $token;
+            // Get user Posts count
+            $posts_count = Post::where('user_id', auth()->id())->count();
 
-            return $user;
+            session(['user_posts_count' => $posts_count]);
 
-        } else {
-            return ['message' => 'Invalid data'];
-        }
+        return redirect()->route('home');
+
+
+        return back()->withErrors([
+            'message' => 'Invalid Credentials'
+        ])->withInput();
+
     }
 
     public function register(RegisterRequest $request)
@@ -119,21 +123,10 @@ class AuthController extends Controller
      */
     public function logout_current()
     {
-        $deleted = auth()->user()->currentAccessToken()->delete();
+        Auth::logout();
 
+        return redirect()->route('login');
 
-        if ($deleted)
-            return response()->json([
-                'success' => true,
-                'message' => 'Logged out successfully',
-                'data' => []
-            ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Cannot Log out at the moment',
-            'data' => []
-        ]);
     }
 
     /**

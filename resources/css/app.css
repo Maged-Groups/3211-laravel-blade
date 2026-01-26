@@ -1,7 +1,9 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -10,149 +12,171 @@
 @source "../../node_modules/flowbite";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 }
 
-    :root {
-            --primary-color: #6366f1;
-            --secondary-color: #8b5cf6;
-            --gradient-start: #6366f1;
-            --gradient-end: #8b5cf6;
-        }
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+    --gradient-start: #6366f1;
+    --gradient-end: #8b5cf6;
+}
 
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+* {
+    font-family: "Inter", sans-serif;
+}
 
-        body {
-            background-color: #f9fafb;
-            overflow-x: hidden;
-        }
+body {
+    background-color: #f9fafb;
+    overflow-x: hidden;
+}
 
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        }
+.gradient-bg {
+    background: linear-gradient(
+        135deg,
+        var(--gradient-start),
+        var(--gradient-end)
+    );
+}
 
-        .gradient-text {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+.gradient-text {
+    background: linear-gradient(
+        135deg,
+        var(--gradient-start),
+        var(--gradient-end)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-        .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.hover-lift {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
 
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-        .post-card {
-            transition: all 0.3s ease;
-        }
+.post-card {
+    transition: all 0.3s ease;
+}
 
-        .post-card:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+.post-card:hover {
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-        .reaction-btn {
-            transition: all 0.2s ease;
-        }
+.reaction-btn {
+    transition: all 0.2s ease;
+}
 
-        .reaction-btn:hover {
-            transform: scale(1.1);
-        }
+.reaction-btn:hover {
+    transform: scale(1.1);
+}
 
-        .reaction-btn.active {
-            transform: scale(1.2);
-        }
+.reaction-btn.active {
+    transform: scale(1.2);
+}
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
-            }
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+    }
 
-            70% {
-                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
-            }
+    70% {
+        box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+    }
 
-            100% {
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-            }
-        }
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+}
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
-            border-radius: 10px;
-        }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        to bottom,
+        var(--gradient-start),
+        var(--gradient-end)
+    );
+    border-radius: 10px;
+}
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #4f46e5, #7c3aed);
-        }
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+}
 
-        /* Glass effect */
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+/* Glass effect */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        /* Shimmer loading effect */
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
+/* Shimmer loading effect */
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
 
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
 
-            100% {
-                background-position: 200% 0;
-            }
-        }
+    100% {
+        background-position: 200% 0;
+    }
+}
 
-        /* Gradient border */
-        .gradient-border {
-            position: relative;
-            border: double 3px transparent;
-            border-radius: 12px;
-            background-image: linear-gradient(white, white), linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            background-origin: border-box;
-            background-clip: content-box, border-box;
-        }
+/* Gradient border */
+.gradient-border {
+    position: relative;
+    border: double 3px transparent;
+    border-radius: 12px;
+    background-image:
+        linear-gradient(white, white),
+        linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}

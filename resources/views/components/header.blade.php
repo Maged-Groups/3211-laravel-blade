@@ -86,8 +86,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                            <a href="{{ route('logout-current') }}"
+                                class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                                 <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
                                 Sign out
                             </a>

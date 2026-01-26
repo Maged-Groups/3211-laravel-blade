@@ -47,13 +47,17 @@ class PostController extends Controller
         $thumbnail_path = $thumbnail->store('thumbnails');
 
         $postData = $request->all();
-        $postData['user_id'] = 1; // Temporary user_id
+        $postData['user_id'] = auth()->id(); // Temporary user_id
         $postData['thumbnail'] = $thumbnail_path;
         // return  $postData;
 
         $post = Post::create($postData);
 
         if ($post) {
+
+            // Increment user posts count in session
+            $posts_count = session('user_posts_count', 0) + 1;
+            session(['user_posts_count' => $posts_count]);
 
             return redirect()->route('posts.show', $post->id)->with('success', 'Post Created Successfully');
         }

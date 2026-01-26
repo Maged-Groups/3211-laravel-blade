@@ -8,13 +8,13 @@
             </div>
         </div>
         <div class="text-center mt-4">
-            <h2 class="text-xl font-bold text-gray-800">Michael Chen</h2>
-            <p class="text-gray-500 text-sm">@michael_c</p>
-            <p class="text-gray-600 mt-2">Web Developer & Technical Writer</p>
+            <h2 class="text-xl font-bold text-gray-800">{{ auth()->user()->name }}</h2>
+            <p class="text-gray-500 text-sm">{{'@' . Str::substr(auth()->user()->email, 0, Str::position(auth()->user()->email, '@')) }}</p>
+            <p class="text-gray-600 mt-2">{{ Str::upper(implode(', ', auth()->user()->roles)) }}</p>
         </div>
         <div class="grid grid-cols-3 gap-4 mt-6 text-center">
             <div>
-                <p class="text-xl font-bold text-gray-800">142</p>
+                <p class="text-xl font-bold text-gray-800">{{ session('user_posts_count') }}</p>
                 <p class="text-gray-500 text-sm">Posts</p>
             </div>
             <div>

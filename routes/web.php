@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
@@ -18,6 +19,14 @@ use App\Http\Controllers\{
 Route::middleware('auth')->group(function () {
     Route::view('/', 'index')->name('home');
     Route::view('/settings', 'settings')->name('settings');
+    Route::put('/settings/profile/update', [SettingController::class, 'update_profile'])->name('settings.profile.update');
+    Route::put('/settings/account/update', [SettingController::class, 'update_account'])->name('settings.account.update');
+    Route::put('/settings/notifications/update', [SettingController::class, 'update_notifications'])->name('settings.notifications.update');
+    Route::put('/settings/password/update', [SettingController::class, 'update_password'])->name('settings.password.update');
+    Route::put('/settings/privacy/update', [SettingController::class, 'update_privacy'])->name('settings.privacy.update');
+    Route::put('/settings/appearance/update', [SettingController::class, 'update_appearance'])->name('settings.appearance.update');
+    Route::delete('/settings/account/delete', [SettingController::class, 'delete_account'])->name('settings.account.delete');
+
 
     Route::controller(PostController::class)
         ->prefix("posts")->group(function () {
@@ -37,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(AuthController::class)->prefix('auth')->group(function () {
         Route::post('change-password', 'change_password');
         Route::get('active-sessions', 'active_sessions');
-        Route::get('logout-current', 'logout_current');
+        Route::get('logout-current', 'logout_current')->name('logout-current');
         Route::get('logout-all', 'logout_all');
         Route::get('logout-others', 'logout_others');
     });

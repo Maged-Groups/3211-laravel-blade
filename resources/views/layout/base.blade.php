@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -28,6 +28,7 @@
 
     @yield('heads')
 </head>
+{{-- use darkmode in body --}}
 
 <body class="bg-gray-50">
     @yield('layout')
@@ -40,7 +41,7 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
-  </script>
+    </script>
     @yield('scripts')
 </body>
 
