@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,12 @@ use App\Http\Controllers\{
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::view('/', 'index')->name('home');
+
+    Route::controller(MainController::class)->group(function () {
+        Route::get('/', 'index')->name('home');
+    });
+
+
     Route::view('/settings', 'settings')->name('settings');
     Route::put('/settings/profile/update', [SettingController::class, 'update_profile'])->name('settings.profile.update');
     Route::put('/settings/account/update', [SettingController::class, 'update_account'])->name('settings.account.update');
@@ -56,6 +62,7 @@ Route::middleware('auth')->group(function () {
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('login', 'login_form')->name('login');
     Route::post('login', 'login');
+    Route::get('register', 'register_form')->name('register');
     Route::post('register', 'register');
     Route::post('forget-password', 'forget_password');
     Route::post('reset-password', 'reset_password');

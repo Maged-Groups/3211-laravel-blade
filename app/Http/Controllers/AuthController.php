@@ -41,19 +41,34 @@ class AuthController extends Controller
 
     }
 
+    
+    public function register_form()
+    {
+        return view('auth.register-form');
+    }
+
+
     public function register(RegisterRequest $request)
     {
+        $photo = $request->file('profile_photo');
+        if ($photo) {
+            $photoPath = $photo->store('profiles');
+            $request->merge(['profile_photo' => $photoPath]); // $request['profile_photo'] = $photoPath;
+        }
+
         $data = $request->validated();
 
-        $data['roles'] = 'user';
+        $data['roles'] = ['user'];
 
         $user = User::create($data);
 
-        $token = $user->createToken('register', $user->roles, now()->addMinutes(20))->plainTextToken;
+        if($user)
+            return redirect()->route('login')->with('success', 'Account created successfully, you can now login');
 
-        $user->token = $token;
+        return back()->withErrors([
+            'message' => 'Cannot create account at the moment'
+        ])->withInput();
 
-        return $user;
     }
 
     public function change_password(ChangePasswordRequest $request)
