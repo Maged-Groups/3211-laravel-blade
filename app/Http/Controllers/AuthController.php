@@ -25,23 +25,22 @@ class AuthController extends Controller
 
         $authenticated = Auth::attempt($loginData);
 
-        if ($authenticated)
+        if (!$authenticated)
+            return back()->withErrors([
+                'message' => 'Invalid Credentials'
+            ])->withInput()->with('error', 'Invalid Credentials');
 
-            // Get user Posts count
-            $posts_count = Post::where('user_id', auth()->id())->count();
+        // Get user Posts count
+        $posts_count = Post::where('user_id', auth()->id())->count();
 
-            session(['user_posts_count' => $posts_count]);
+        session(['user_posts_count' => $posts_count]);
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Logged in successfully');
 
-
-        return back()->withErrors([
-            'message' => 'Invalid Credentials'
-        ])->withInput();
 
     }
 
-    
+
     public function register_form()
     {
         return view('auth.register-form');
@@ -62,7 +61,7 @@ class AuthController extends Controller
 
         $user = User::create($data);
 
-        if($user)
+        if ($user)
             return redirect()->route('login')->with('success', 'Account created successfully, you can now login');
 
         return back()->withErrors([

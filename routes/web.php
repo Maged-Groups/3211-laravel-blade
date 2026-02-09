@@ -15,6 +15,13 @@ use App\Http\Controllers\{
     ReplyController
 };
 
+Route::view('components', 'components')->name('components');
+
+Route::get('components-var', function () {
+    $title = 'TV SAMMan';
+    $price = 10000;
+    return view('components-var', compact('title', 'price'));
+})->name('components-var');
 
 // Protected Routes
 Route::middleware('auth')->group(function () {

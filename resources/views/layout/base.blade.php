@@ -31,6 +31,8 @@
 {{-- use darkmode in body --}}
 
 <body class="bg-gray-50">
+  
+
     @yield('layout')
 
     <!-- Lucide Icons -->
@@ -45,37 +47,16 @@
     @yield('scripts')
 
     {{-- Session Messages --}}
-    @if(!session('success'))
-        <div class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
-            {{ session('success') ?? 'Good job!' }}
-            <button type="button"
-                class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-brand-medium hover:bg-brand-soft inline-flex items-center justify-center h-8 w-8 shrink-0 shrink-0"
-                data-dismiss-target="#alert-1" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18 17.94 6M18 18 6.06 6" />
-                </svg>
-            </button>
-        </div>
+
+    @if (session('success'))
+        <x-dynamic.alert text="{{ session('success') }}" variant="success" />
     @endif
 
-    @if(session('error'))
-        <div class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
-            {{ session('error') }}
-            <button type="button"
-                class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-brand-medium hover:bg-brand-soft inline-flex items-center justify-center h-8 w-8 shrink-0 shrink-0"
-                data-dismiss-target="#alert-1" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18 17.94 6M18 18 6.06 6" />
-                </svg>
-            </button>
-        </div>
-    @endif
+    @if (session('error'))
+        <x-dynamic.alert text="{{ session('error') }}" variant="error" />
+        @endif
+        
+        <x-dynamic.alert variant="error" />
 </body>
 
 </html>
