@@ -20,9 +20,10 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = Post::all();
+        return 'All Posts';
+        // $posts = Post::all();
 
-        return $posts;
+        // return $posts;
     }
 
     /**

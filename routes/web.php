@@ -1,25 +1,23 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\InitController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostStatusController;
+use App\Http\Controllers\ReactionTypeController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\{
-    InitController,
-    AuthController,
-    UserController,
-    PostController,
-    PostStatusController,
-    ReactionTypeController,
-    CommentController,
-    ReplyController
-};
 
 Route::view('components', 'components')->name('components');
 
 Route::get('components-var', function () {
     $title = 'TV SAMMan';
     $price = 10000;
+
     return view('components-var', compact('title', 'price'));
 })->name('components-var');
 
@@ -30,7 +28,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('home');
     });
 
-
     Route::view('/settings', 'settings')->name('settings');
     Route::put('/settings/profile/update', [SettingController::class, 'update_profile'])->name('settings.profile.update');
     Route::put('/settings/account/update', [SettingController::class, 'update_account'])->name('settings.account.update');
@@ -40,21 +37,22 @@ Route::middleware('auth')->group(function () {
     Route::put('/settings/appearance/update', [SettingController::class, 'update_appearance'])->name('settings.appearance.update');
     Route::delete('/settings/account/delete', [SettingController::class, 'delete_account'])->name('settings.account.delete');
 
-
     Route::controller(PostController::class)
-        ->prefix("posts")->group(function () {
+        ->prefix('posts')->group(function () {
             Route::get('deleted', 'deleted');
             Route::get('{id}/restore', 'restore');
         });
 
-    Route::resources([
-        'users' => UserController::class,
-        'post-statuses' => PostStatusController::class,
-        'reaction-types' => ReactionTypeController::class,
-        'posts' => PostController::class,
-        'comments' => CommentController::class,
-        'replies' => ReplyController::class,
-    ]);
+    Route::middleware(['throttle:browse'])->group(function () {
+        Route::resources([
+            'users' => UserController::class,
+            'post-statuses' => PostStatusController::class,
+            'reaction-types' => ReactionTypeController::class,
+            'posts' => PostController::class,
+            'comments' => CommentController::class,
+            'replies' => ReplyController::class,
+        ]);
+    });
 
     Route::controller(AuthController::class)->prefix('auth')->group(function () {
         Route::post('change-password', 'change_password');
@@ -66,7 +64,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Public Routes
-Route::controller(AuthController::class)->prefix('auth')->group(function () {
+Route::middleware(['throttle:50,1'])->controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('login', 'login_form')->name('login');
     Route::post('login', 'login');
     Route::get('register', 'register_form')->name('register');
@@ -88,4 +86,4 @@ Route::controller(InitController::class)->prefix('init')->group(
 );
 
 // Fallback Route
-Route::fallback(fn() => view('404'));
+Route::fallback(fn () => view('404'));
