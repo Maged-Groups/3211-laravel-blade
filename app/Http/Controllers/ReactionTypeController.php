@@ -13,7 +13,7 @@ class ReactionTypeController extends Controller
      */
     public function index()
     {
-        //
+        returnr ';;;';
     }
 
     /**
